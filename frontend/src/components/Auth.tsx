@@ -1,15 +1,29 @@
 import { ChangeEvent } from "react";
-import { Link } from "react-router-dom"
+import { Link , useNavigate } from "react-router-dom"
 import { SignupInput } from "@amriith/medium-common";
 import { useState } from "react";
+import axios from "axios";
+import { BACKEND_URL} from "../config"
 
 export const Auth = ({type} : {type: "Signup" | "Signin" }) => {
-
+    const navigate = useNavigate();
     const [postInputs, setPostInputs] = useState<SignupInput>({
         email : "",
         password:"",
         name: ""
     })
+
+    async function  sendRequest(){
+    try{
+        const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "Signup" ? "signup": "signin"}`, postInputs)
+        const {jwt} = response.data;
+        localStorage.setItem("jwt", jwt);
+        navigate("/blog");
+    } catch(e){
+        alert("Error while signing up")
+    }
+     }
+
     return (<div className=" h-screen flex justify-center flex-col">
     <div className="flex justify-center">
       <div>
@@ -37,7 +51,7 @@ export const Auth = ({type} : {type: "Signup" | "Signin" }) => {
                 password: e.target.value
             })} />
             
-            <button type="button" className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm mt-8 px-5 py-2.5 
+            <button type="button" onClick={sendRequest} className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm mt-8 px-5 py-2.5 
             mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">{type === "Signup" ? "Sign up" : "Sign in"}</button>
         </div>
         </div>      
