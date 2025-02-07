@@ -13,15 +13,15 @@ export const BlogCard = ({
     publishedDate
 }: BlogCardProps) =>{
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col border border-slate-250">
             
            <div className="flex items-center space-x-2"> 
-           <Avatar/>  {authorName}  .  {publishedDate}
+           <Avatar/> <div className="font-extralength pl-2 text-sm flex" > {authorName}  </div>  <div className="font-thin pl-2 text-slate-500" >{publishedDate} </div> 
             </div> 
-            <div>
+            <div className="font-semibold text-xl">
                 {title}
             </div>
-            <div>
+            <div className="text-slate-600 dark:text-slate-400">
                 {content.slice(0,70) + "...."}
             </div>
             <div>
