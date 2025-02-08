@@ -50,6 +50,7 @@ blogRouter.post('/',async (c) => {
             title: body.title,
             content : body.content,
             authorId:  authorId
+           
         }
       })
       return c.json({
@@ -94,7 +95,18 @@ blogRouter.post('/',async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
-    const blogs = await prisma.post.findMany();
+    const blogs = await prisma.post.findMany({
+        select: {
+            content: true,
+            title: true,
+            id: true,
+            author: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    });
 
     return c.json({
        blog: blogs
