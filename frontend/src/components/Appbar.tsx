@@ -7,7 +7,7 @@ export const Appbar = () =>{
             Medium
           </div>
           <div>
-            <Avatar/>
+            <Avatar name="harsha"/>
           </div>
         </div>
     )
