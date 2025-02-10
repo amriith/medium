@@ -1,32 +1,39 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
+import axios from "axios"; 
+import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 
-export interface Blog{
-    title: string;
-    content : string;
-    id : number;
-    author: {
-        name: string;
-    }
-
+export interface Blog {
+  title: string;
+  content: string;
+  id: number;
+  author: {
+    name: string;
+  };
 }
 
 export const useBlog = ({id} : {id:string}) =>{
     const [loading , setLoading]= useState(true);
-    const [posts, setPosts] = useState<Blog>();
+    const [posts, setPosts] = useState<Blog[]>([]);
 
-     useEffect( () => {
-        axios.get(`${BACKEND_URL}/api/v1/blog/${id}`,{
-            headers: {
-                Authorization: localStorage.getItem("token")
-            } 
-        })
-        .then(response =>{
-            setPosts(response.data.blogs)
-            setLoading(false)
-        })
-     }, [id])
+    useEffect(() => {
+        const fetchBlog = async () => {
+          try {
+            const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
+              headers: {
+                authorization: localStorage.getItem("token"),
+              },
+            });
+            setPosts(response.data.blog || []); 
+          } catch (error) {
+            console.error("Error fetching blog:", error); 
+            setPosts([]); //
+          } finally {
+            setLoading(false);
+          }
+        };
+      
+        fetchBlog();
+      }, [id]);
 
      return {
         loading,
@@ -34,23 +41,28 @@ export const useBlog = ({id} : {id:string}) =>{
      }
 }
 
-export const useBlogs= () =>{
-    const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState<Blog>();
+export const useBlogs = () => {
+  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<Blog[]>([]);
 
-    useEffect( () =>{
-        axios.get(`${BACKEND_URL}/api/v1/blog/bulk`,{
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
-        .then(response =>{
-            setPosts(response.data.blogs)
-            setLoading(false)
-        })
-    },[])
-    return{
-        loading,
-        posts
-    }
-}
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
+      headers: {
+        Authorization: localStorage.getItem("token")
+      }
+    })
+    .then(response => {
+      setPosts(response.data.blog);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error("Error fetching blogs", error);
+      setLoading(false);
+    });
+  }, []);
+
+  return {
+    loading,
+    posts
+  };
+};
