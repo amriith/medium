@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 interface BlogCardProps {
@@ -5,15 +6,17 @@ interface BlogCardProps {
     title:string;
     content: string;
     publishedDate: string;
+    id: number;
 }
 export const BlogCard = ({
+    id,
     authorName,
     title,
     content,
     publishedDate
 }: BlogCardProps) =>{
     return (
-        <div className="flex flex-col border rounded-2xl shadow-sm  pb-4 pt-4 border-slate-250">
+       <Link to={`/blog/${id}`} > <div className="flex flex-col border-b pb-4 max-w-screen-md pt-4 ">
             <a href="#">
            <div className="flex items-center space-x-2"> 
            <Avatar  name={authorName} /> <div className="font-extralength pl-2 text-sm flex" > {authorName}  </div>    <div className="flex justify-center flex-col pl-2 flex justify-center flex-col">
@@ -31,6 +34,7 @@ export const BlogCard = ({
             </div>
             </a>
         </div>
+        </Link>
     )   
 }
 function Badge({title}: Pick<BlogCardProps, "title">){

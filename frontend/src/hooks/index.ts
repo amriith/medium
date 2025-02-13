@@ -13,27 +13,26 @@ export interface Blog {
 
 export const useBlog = ({id} : {id:string}) =>{
     const [loading , setLoading]= useState(true);
-    const [posts, setPosts] = useState<Blog[]>([]);
+    const [posts, setPosts] = useState<Blog | null>(null);
 
     useEffect(() => {
-        const fetchBlog = async () => {
+      const fetchBlog = async () => {
           try {
-            const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
-              headers: {
-                authorization: localStorage.getItem("token"),
-              },
-            });
-            setPosts(response.data.blog || []); 
+              const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
+                  headers: { authorization: localStorage.getItem("token") }
+              });
+              setPosts(response.data.blog || null); 
           } catch (error) {
-            console.error("Error fetching blogs:", error); 
-            setPosts([]); //
+              console.error("Error fetching blog:", error);
+              setPosts(null);
           } finally {
-            setLoading(false);
+              setLoading(false);
           }
-        };
-      
-        fetchBlog();
-      }, [id]);
+      };
+
+      fetchBlog();
+  }, [id]);
+
 
 
      return {
