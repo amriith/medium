@@ -25,7 +25,7 @@ export const useBlog = ({id} : {id:string}) =>{
             });
             setPosts(response.data.blog || []); 
           } catch (error) {
-            console.error("Error fetching blog:", error); 
+            console.error("Error fetching blogs:", error); 
             setPosts([]); //
           } finally {
             setLoading(false);
@@ -34,6 +34,7 @@ export const useBlog = ({id} : {id:string}) =>{
       
         fetchBlog();
       }, [id]);
+
 
      return {
         loading,
